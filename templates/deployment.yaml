@@ -59,19 +59,22 @@ spec:
           imagePullPolicy: IfNotPresent
           name: echoserver
           ports:
-            - containerPort: 8080
+            - containerPort: 80
               name: http
+              protocol: TCP
           env:
             - name: PORT
-              value: "8080"
+              value: "80"
           livenessProbe:
             httpGet:
-              path: /
-              port: 8080
+              path: /healthz
+              port: 80
+              scheme: HTTP
           readinessProbe:
             httpGet:
-              path: /
-              port: 8080
+              path: /readyz
+              port: 80
+              scheme: HTTP
           resources:
             requests:
               {{- include "helm_lib_module_ephemeral_storage_only_logs" . | nindent 14 }}
