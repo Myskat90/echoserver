@@ -1,0 +1,56 @@
+include:
+  - remote: 'https://raw.githubusercontent.com/deckhouse/modules-gitlab-ci/refs/heads/main/templates/Setup.gitlab-ci.yml'
+  - remote: 'https://raw.githubusercontent.com/deckhouse/modules-gitlab-ci/refs/heads/main/templates/Build.gitlab-ci.yml'
+  - remote: 'https://raw.githubusercontent.com/deckhouse/modules-gitlab-ci/refs/heads/main/templates/Deploy.gitlab-ci.yml'
+
+# Change the values of the variables below to match your project.
+# To use Gitlab embedded registry, set the values to the following:
+#   MODULES_MODULE_NAME: the-name-of-your-module
+#   MODULES_REGISTRY: registry.your-gitlab-address.com
+#   MODULES_MODULE_SOURCE: registry.your-gitlab-address.com/path/to/your/repo
+#   MODULES_MODULE_TAG: ${CI_COMMIT_REF_NAME}
+# The module will be accessible at the following address:
+#   - registry.your-gitlab-address.com/path/to/your/repo:the-name-of-your-module
+#   - registry.your-gitlab-address.com/path/to/your/repo/the-name-of-your-module:${CI_COMMIT_REF_NAME}
+variables:
+  MODULES_MODULE_NAME: echoserver
+  MODULES_REGISTRY: registry.your-gitlab-address.com
+  MODULES_MODULE_SOURCE: registry.your-gitlab-address.com/path/to/your/repo
+  MODULES_MODULE_TAG: ${CI_COMMIT_REF_NAME}
+  WERF_VERSION: "2 stable"
+  BASE_IMAGES_VERSION: v0.5.7
+
+default:
+  tags:
+    - my-runner
+
+Lint:
+  extends: .lint
+
+Build:
+  extends: .build
+
+Deploy to Alpha:
+  extends: .deploy
+  variables:
+    RELEASE_CHANNEL: alpha
+
+Deploy to Beta:
+  extends: .deploy
+  variables:
+    RELEASE_CHANNEL: beta
+
+Deploy to EarlyAccess:
+  extends: .deploy
+  variables:
+    RELEASE_CHANNEL: early-access
+
+Deploy to Stable:
+  extends: .deploy
+  variables:
+    RELEASE_CHANNEL: stable
+
+Deploy to RockSolid:
+  extends: .deploy
+  variables:
+    RELEASE_CHANNEL: rock-solid
