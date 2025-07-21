@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echoserver
+  namespace: {{ .Chart.Name }}
+  {{- include "helm_lib_module_labels" (list . (dict "app" "echoserver")) | nindent 2 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: {{ include "helm_lib_module_ingress_class" . | quote }}
+  rules:
+  - host: {{ include "helm_lib_module_public_domain" (list . "echoserver") }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: echoserver
+            port:
+              number: 80
+  {{- if (include "helm_lib_module_https_ingress_tls_enabled" .) }}
+  tls:
+    - hosts:
+        - {{ include "helm_lib_module_public_domain" (list . "echoserver") }}
+      secretName: {{ include "helm_lib_module_https_secret_name" (list . "ingress-tls") }}
+  {{- end }}

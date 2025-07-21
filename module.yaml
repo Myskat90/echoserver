@@ -1,0 +1,11 @@
+name: echoserver
+stage: Preview
+weight: 960
+requirements:
+    deckhouse: ">= 1.69"
+subsystems:
+  - chore
+namespace: echoserver
+descriptions:
+  en: A simple echoserver for demo purposes.
+tags: ["demo"]
