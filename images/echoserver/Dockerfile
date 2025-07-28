@@ -1,1 +1,1 @@
-FROM ealen/echo-server:0.7.0
+FROM ealen/echo-server:0.9.2
