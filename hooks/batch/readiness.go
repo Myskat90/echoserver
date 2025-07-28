@@ -22,19 +22,29 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/deckhouse/module-sdk/pkg"
 )
 
+func buildReadyURL() string {
+	host, port := os.Getenv("ECHOSERVER_SERVICE_HOST"), os.Getenv("ECHOSERVER_SERVICE_PORT")
+	if host != "" && port != "" {
+		return fmt.Sprintf("http://%s:%s/readyz", host, port)
+	}
+	return "http://echoserver.echoserver.svc:8081/readyz"
+}
+
 func ReadinessFunc(ctx context.Context, input *pkg.HookInput) error {
-	input.Logger.Info("start user logic for readiness probe")
+	url := buildReadyURL()
+	input.Logger.Info("readiness probe", slog.String("url", url))
 
-	c := input.DC.GetHTTPClient()
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://127.0.0.1:8081/readyz", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return fmt.Errorf("create request: %w", err)
 	}
+
+	c := input.DC.GetHTTPClient()
 
 	resp, err := c.Do(req)
 	if err != nil {
