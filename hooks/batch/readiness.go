@@ -31,7 +31,7 @@ func ReadinessFunc(ctx context.Context, input *pkg.HookInput) error {
 
 	c := input.DC.GetHTTPClient()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://127.0.0.1/readyz", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://127.0.0.1:8081/readyz", nil)
 	if err != nil {
 		return fmt.Errorf("create request: %w", err)
 	}

@@ -59,21 +59,21 @@ spec:
           imagePullPolicy: IfNotPresent
           name: echoserver
           ports:
-            - containerPort: 80
+            - containerPort: 8081
               name: http
               protocol: TCP
           env:
             - name: PORT
-              value: "80"
+              value: "8081"
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 80
+              port: 8081
               scheme: HTTP
           readinessProbe:
             httpGet:
               path: /readyz
-              port: 80
+              port: 8081
               scheme: HTTP
           resources:
             requests:
