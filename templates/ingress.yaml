@@ -22,7 +22,7 @@ spec:
           service:
             name: echoserver
             port:
-              number: 80
+              name: http
   {{- if (include "helm_lib_module_https_ingress_tls_enabled" .) }}
   tls:
     - hosts:
